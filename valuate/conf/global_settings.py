@@ -106,6 +106,7 @@ PROFITS = {'A': (0.05, 0.094, 0.027, 0.02, 0.12, 0.08, 0.09, 0.006, -0.01),
            'C': (0.05, 0.134, 0.02, 0.03, 0.16, 0.12, 0.11, 0.003, -0.01)}
 
 # 各车况因素的系数
+CAR_CONDITION = ['excellent', 'good', 'fair', 'bad']
 CAR_CONDITION_COEFFICIENT = {'excellent': 1.04, 'good': 1, 'fair': 0.95, 'bad': 0.89}
 CAR_CONDITION_COEFFICIENT_VALUES = [1.04, 1, 0.95, 0.89]
 
@@ -122,5 +123,7 @@ RETURN_NORMAL = 'normal'
 ###########################
 ERROR_PARAMS = 'PARAMS'
 ERROR_SQL = 'SQL'
+
+CONDITION_JSON = '[{"item":"左前纵梁","number":0},{"item":"右前纵梁","number":0},{"item":"左前减震器座","number":0},{"item":"右前减震器座","number":0},{"item":"防火墙","number":0},{"item":"左A柱","number":0},{"item":"左B柱","number":0},{"item":"左C柱","number":0},{"item":"右B柱","number":0},{"item":"右C柱","number":0},{"item":"右A柱","number":0},{"item":"左后纵梁","number":0},{"item":"右后纵梁","number":0},{"item":"右后减震器座","number":0},{"item":"左后减震器座","number":0},{"item":"火烧情况","number":0},{"item":"泡水情况","number":0},{"item":"前保险杠","number":0},{"item":"机盖","number":0},{"item":"左前叶子板","number":0},{"item":"左前轮胎","number":0},{"item":"左前轮毂","number":0},{"item":"前挡风玻璃","number":0},{"item":"左前门","number":0},{"item":"左后门","number":0},{"item":"左后叶子板","number":0},{"item":"左后轮胎","number":0},{"item":"左后轮毂","number":0},{"item":"左后大灯","number":0},{"item":"右后大灯","number":0},{"item":"后保险杠","number":0},{"item":"右后轮胎","number":0},{"item":"右后轮毂","number":0},{"item":"右后叶子板","number":0},{"item":"右后门","number":0},{"item":"右前门","number":0},{"item":"右前叶子板","number":0},{"item":"右前轮胎","number":0},{"item":"右前轮毂","number":0},{"item":"左侧下边梁","number":0},{"item":"右侧下边梁","number":0},{"item":"车顶","number":0},{"item":"右前大灯","number":0},{"item":"左前大灯","number":0},{"item":"中控台","number":0},{"item":"仪表盘","number":0},{"item":"主驾驶座椅","number":0},{"item":"副驾驶座椅","number":0},{"item":"后排座椅","number":0},{"item":"车辆顶棚","number":0},{"item":"换挡杆区域","number":0},{"item":"车辆娱乐设备","number":0},{"item":"方向盘","number":0},{"item":"空调","number":0},{"item":"右前翼子板内衬","number":0},{"item":"左前翼子板内衬","number":0},{"item":"右后翼子板内衬","number":0},{"item":"左后翼子板内衬","number":0},{"item":"前防撞梁","number":0},{"item":"后防撞梁","number":0},{"item":"备胎槽","number":0},{"item":"水箱框架","number":0},{"item":"发动机","number":0},{"item":"发动机状况","number":0},{"item":"变速箱","number":0},{"item":"变速箱状况","number":0},{"item":"转向系统","number":0},{"item":"离合器系统","number":0},{"item":"刹车系统","number":0},{"item":"发动机是否烧机油","number":0}]'
 
 

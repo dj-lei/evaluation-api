@@ -259,6 +259,64 @@ def cal_residuals(price, next_year):
     return residuals
 
 
+def cal_score(df):
+    """
+    计算车况评级每一项得分
+    """
+    if df['number'] == 0:
+        return df['number_0']
+    if df['number'] == 1:
+        return df['number_1']
+    if df['number'] == 2:
+        return df['number_2']
+    if df['number'] == 3:
+        return df['number_3']
+
+
+def cal_final_score_and_condition(data, cur_condition, mile_per_year):
+    """
+    计算最终得分和车况
+    """
+    score = 0
+    inner = data.loc[(data['position'] == '内饰'), 'score'].values[0]
+    outter = data.loc[(data['position'] == '外观'), 'score'].values[0]
+    structure = data.loc[(data['position'] == '机械结构'), 'score'].values[0]
+    reinforce = data.loc[(data['position'] == '车辆加强件'), 'score'].values[0]
+    skeleton = data.loc[(data['position'] == '车辆骨架或事故'), 'score'].values[0]
+    if skeleton > 35:
+        score = score + 35
+    score = score + skeleton
+    if outter > 20:
+        score = score + 20
+    score = score + outter
+    if inner > 15:
+        score = score + 15
+    score = score + inner
+    if reinforce > 10:
+        score = score + 10
+    score = score + reinforce
+    if structure > 20:
+        score = score + 20
+    score = score + structure
+
+    if mile_per_year > 3:
+        score = score + 5
+
+    final_score = 100 - score
+    if 92 <= final_score <= 100:
+        evalute_condition = 0
+    elif 78 <= final_score <= 91:
+        evalute_condition = 1
+    elif 65 <= final_score <= 77:
+        evalute_condition = 2
+    elif final_score < 65:
+        evalute_condition = 3
+
+    if evalute_condition > cur_condition:
+        return gl.CAR_CONDITION[evalute_condition]
+    return gl.CAR_CONDITION[cur_condition]
+
+
 class Predict(object):
 
     def __init__(self):
@@ -284,14 +342,15 @@ class Predict(object):
         self.result['predict_price'] = self.result['predict_price'] / self.result['buy_profit_rate']
         self.result['predict_price'] = self.result['profit_rate'] * self.result['predict_price']
 
-        # 车况判断两年以内优秀,8-3年良好,9年以上一般
+        # 车况判断两年以内优秀,8-3年良好,9-11年一般,12年以上较差
         if data[0]['used_years'] <= 2:
             condition = 'excellent'
         elif 2 < data[0]['used_years'] <= 8:
             condition = 'good'
-        elif 8 < data[0]['used_years']:
+        elif 8 < data[0]['used_years'] <= 11:
             condition = 'fair'
-
+        elif 12 < data[0]['used_years']:
+            condition = 'bad'
         # 计算所有交易类型
         self.result = cal_intent_condition(self.result.predict_price.values, condition)
 
@@ -387,6 +446,47 @@ class Predict(object):
 
         # 根据交易方式修正预测值
         self.add_process_intent(self.result)
+
+        if ret_type == gl.RETURN_RECORDS:
+            return self.result.to_dict(gl.RETURN_RECORDS)
+        else:
+            return self.result
+
+    def predict_with_condition(self, condition_desc=None, city='深圳', model_detail_slug='model_25023_cs', reg_year=2015, reg_month=3, deal_year=datetime.datetime.now().year, deal_month=datetime.datetime.now().month, mile=2, ret_type=gl.RETURN_RECORDS):
+        """
+        预测估值和车况定级
+        """
+        # 校验参数
+        check_params_value(reg_year, reg_month, deal_year, deal_month, mile)
+
+        # 转换编码
+        used_years = 1 if (deal_year - reg_year) == 0 else deal_year - reg_year
+
+        # 查询对应条件预测
+        self.result = db_operate.query_valuate(model_detail_slug, city)
+        if len(self.result) == 0:
+            raise ApiParamsValueError('model_detail_slug or city', 0, 'Unknown model or city!')
+        self.result['reg_month'] = reg_month
+        self.result['used_years'] = used_years
+        self.result['year_flag'] = deal_year - reg_year
+        self.result['mile'] = mile
+
+        if self.result.loc[0, 'year'] > datetime.datetime.now().year:
+            self.result['year'] = datetime.datetime.now().year
+
+        # 预测返回保值率
+        self.result[['price', 'hedge']] = self.result.apply(df_process_hedge, axis=1)
+
+        # 根据交易方式修正预测值
+        self.add_process_intent(self.result)
+
+        # 车况评级
+        condition_valuate = pd.read_json(condition_desc, orient='records')
+        condition_valuate = condition_evaluate_map.merge(condition_valuate, how='left', on=['item'])
+        condition_valuate['score'] = condition_valuate.apply(cal_score, axis=1)
+        condition_valuate = condition_valuate.groupby(['position'])['score'].sum().reset_index()
+        condition = cal_final_score_and_condition(condition_valuate, gl.CAR_CONDITION.index(self.result.loc[0, 'condition']), mile/used_years)
+        self.result['condition'] = condition
 
         if ret_type == gl.RETURN_RECORDS:
             return self.result.to_dict(gl.RETURN_RECORDS)

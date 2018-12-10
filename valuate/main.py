@@ -6,6 +6,7 @@ import os
 os.environ['VALUATE_RUNTIME_ENVIRONMENT'] = 'LOCAL'
 
 from valuate.predict.predict_api import Predict
+from valuate.conf import global_settings as gl
 
 
 if __name__ == "__main__":
@@ -33,20 +34,10 @@ if __name__ == "__main__":
     # test.to_csv('/home/ml/PycharmProjects/evaluation-predict/api_valuate/explore/man.csv', index=False)
 
     predict = Predict()
-    result = predict.predict(city='成都', model_detail_slug='8eb2866c5b_autotis', reg_year=2018, reg_month=3, deal_year=2018, deal_month=10, mile=0.5, ret_type='normal')
+    # result = predict.predict(city='成都', model_detail_slug='8eb2866c5b_autotis', reg_year=2018, reg_month=3, deal_year=2018, deal_month=10, mile=0.5, ret_type='normal')
+    # print(result)
+    result = predict.predict_with_condition(condition_desc=gl.CONDITION_JSON, city='上海', model_detail_slug='96725_autotis', reg_year=2015, reg_month=6, deal_year=2018, deal_month=8, mile=4.5, ret_type='normal')
     print(result)
-    # result = predict.predict(city='上海', model_detail_slug='96725_autotis', reg_year=2015, reg_month=6, deal_year=2018, deal_month=8, mile=4.5, ret_type='normal')
-    # print(result)
-    # result = predict.predict(city='曲靖', model_detail_slug='00433527bf_autotis', reg_year=2018, reg_month=5, deal_year=2018, deal_month=8, mile=0.5, ret_type='normal')
-    # print(result)
-    # result = predict.predict(city='上海', model_detail_slug='109399_autotis', reg_year=2016, reg_month=6, deal_year=2018, deal_month=8, mile=3, ret_type='normal')
-    # print(result)
-    # result = predict.predict(city='上海', model_detail_slug='120488_autotis', reg_year=2017, reg_month=6, deal_year=2018, deal_month=8, mile=1.5, ret_type='normal')
-    # print(result)
-    # result = predict.predict(city='上海', model_detail_slug='119704_autotis', reg_year=2017, reg_month=6, deal_year=2018, deal_month=8, mile=1.5, ret_type='normal')
-    # print(result)
-    # result = predict.predict(city='上海', model_detail_slug='104494_autotis', reg_year=2016, reg_month=6, deal_year=2018, deal_month=8, mile=3, ret_type='normal')
-    # print(result)
     # result = predict.residuals(city='苏州', model_detail_slug='m14877_ba', reg_year=2012, reg_month=2, deal_year=2018, deal_month=8, mile=12, ret_type='normal')
     # print(result)
     # result = predict.history_price_trend(city='苏州', model_detail_slug='m14877_ba', reg_year=2012, reg_month=2, deal_year=2018, deal_month=8, mile=12, ret_type='normal')
