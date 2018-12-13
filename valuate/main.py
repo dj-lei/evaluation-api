@@ -11,7 +11,7 @@ from valuate.conf import global_settings as gl
 
 if __name__ == "__main__":
     predict = Predict()
-    test = pd.read_csv('../tmp/train.csv')
+    test = pd.read_csv('../tmp/wait_predict.csv')
     test['buy_price'] = np.NaN
     for i in range(0, len(test)):
         try:
@@ -30,5 +30,5 @@ if __name__ == "__main__":
     test.to_csv('../tmp/predict_result.csv', index=False)
 
     # predict = Predict()
-    # result = predict.predict(city='成都', detail_slug=35202, reg_year=2018, reg_month=11, deal_year=2018, deal_month=12, mile=0.1)
+    # result = predict.predict(city='成都', detail_slug=26545, reg_year=2015, reg_month=3, deal_year=2018, deal_month=12, mile=2)
     # print(result)
