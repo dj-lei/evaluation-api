@@ -27,6 +27,7 @@ if __name__ == "__main__":
             test.loc[i, 'buy_price'] = result
         except Exception:
             print(i)
+    test = test.sort_values(by=['brand_slug', 'model_slug', 'online_year', 'price_bn'])
     test.to_csv('../tmp/predict_result.csv', index=False)
 
     # predict = Predict()
