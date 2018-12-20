@@ -101,7 +101,7 @@ PROFITS = {'A': (0.05, 0.094, 0.027, 0.02, 0.12, 0.08, 0.09, 0.006, -0.01),
 CAR_CONDITION = ['excellent', 'good', 'fair', 'bad']
 CAR_CONDITION_COEFFICIENT = {'excellent': 1.04, 'good': 1, 'fair': 0.95, 'bad': 0.89}
 CAR_CONDITION_COEFFICIENT_VALUES = [1.04, 1, 0.95, 0.89]
-0.095 0.685
+
 # 交易方式
 INTENT_TYPE = ['sell', 'buy', 'release', 'private', 'lowest', 'cpo', 'replace', 'auction', 'avg-buy', 'avg-sell']
 INTENT_TYPE_CAN = ['release', 'release', 'release', 'release', 'release', 'release', 'release', 'release', 'release', 'release']
