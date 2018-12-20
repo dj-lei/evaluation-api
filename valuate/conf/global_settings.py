@@ -88,14 +88,6 @@ elif RUNTIME_ENVIRONMENT == 'PRODUCT_OUTTER':
 ###########################
 # 模型预测配置
 ###########################
-# 公里数阈值和范围
-# 正常行驶的车辆以一年2.5万公里为正常基数，低于2.5万公里的价格的浮动在+3.5%以内
-# 大于2.5万公里的若每年的平均行驶里程大于2.5万公里小于5万公里价格浮动在-3.5-7.5%
-# 若年平均形式里程大于5万公里及以上影响价格在-7.5-12.5%之间
-MILE_THRESHOLD_2_5 = 2.5
-MILE_THRESHOLD_5 = 5
-MILE_THRESHOLD_10 = 10
-
 # # 畅销程度系数
 # PROFITS = {'A': (0.06, 0.11, 0.027, 0.02, 0.12, 0.08, 0.09, 0.006, -0.01),
 #            'B': (0.05, 0.13, 0.031, 0.025, 0.14, 0.10, 0.10, 0.007, -0.01),
@@ -109,7 +101,7 @@ PROFITS = {'A': (0.05, 0.094, 0.027, 0.02, 0.12, 0.08, 0.09, 0.006, -0.01),
 CAR_CONDITION = ['excellent', 'good', 'fair', 'bad']
 CAR_CONDITION_COEFFICIENT = {'excellent': 1.04, 'good': 1, 'fair': 0.95, 'bad': 0.89}
 CAR_CONDITION_COEFFICIENT_VALUES = [1.04, 1, 0.95, 0.89]
-
+0.095 0.685
 # 交易方式
 INTENT_TYPE = ['sell', 'buy', 'release', 'private', 'lowest', 'cpo', 'replace', 'auction', 'avg-buy', 'avg-sell']
 INTENT_TYPE_CAN = ['release', 'release', 'release', 'release', 'release', 'release', 'release', 'release', 'release', 'release']
