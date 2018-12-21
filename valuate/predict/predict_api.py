@@ -148,7 +148,7 @@ class Predict(object):
         mile_price = (k * (mile/used_months) + b) * median_price
 
         final_price = median_price + province_price + warehouse_price + mile_price
-        print(final_price)
+
         # print('median_price', int(median_price))
         # print('province_price', int(province_price))
         # print('warehouse_price', int(warehouse_price))
