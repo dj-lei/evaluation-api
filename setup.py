@@ -13,7 +13,6 @@ setup(
     package_data={
         '': ['*.csv'],
     },
-
     install_requires=[
         'numpy==1.15.4',
         'pandas==0.23.4',
@@ -22,6 +21,5 @@ setup(
         'mysql-connector-python==8.0.5',
         'PyMySQL==0.9.2',
     ],
-
     # include_package_data=True
 )

@@ -6,6 +6,6 @@ result_map = pd.DataFrame(columns=['intent', 'intent_source', 'predict_price'])
 result_map['intent'] = pd.Series(gl.INTENT_TYPE)
 result_map['intent_source'] = pd.Series(gl.INTENT_TYPE_CAN)
 
-condition_evaluate_map = pd.read_csv(path + '../tmp/condition_evaluate.csv')
+condition_evaluate_map = pd.read_csv(path + 'predict/condition_evaluate.csv')
 
 
