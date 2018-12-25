@@ -166,13 +166,6 @@ class Predict(object):
         加载各类匹配表和模型
         """
         self.result = []
-        self.combine_detail = pd.read_csv(path + '../tmp/combine_detail.csv')
-        self.div_price_bn_k_param = pd.read_csv(path + '../tmp/div_price_bn_k_param.csv')
-        self.div_province_k_param = pd.read_csv(path + '../tmp/div_province_k_param.csv')
-        self.div_warehouse_k_param = pd.read_csv(path + '../tmp/div_warehouse_k_param.csv')
-        self.div_mile_k_param = pd.read_csv(path + '../tmp/div_mile_k_param.csv')
-        self.global_model_mean = pd.read_csv(path + '../tmp/global_model_mean.csv')
-        self.province_city_map = pd.read_csv(path + '../tmp/province_city_map.csv')
 
     def add_process_intent(self, final_price, used_years):
         """
@@ -201,26 +194,25 @@ class Predict(object):
         # 计算所有交易类型
         self.result = cal_intent_condition(self.result.predict_price.values, condition)
 
-    def predict(self, city='深圳', model_detail_slug='model_25023_cs', reg_year=2015, reg_month=3, deal_year=datetime.datetime.now().year, deal_month=datetime.datetime.now().month, mile=2, ret_type=gl.RETURN_RECORDS):
+    def query(self, city='深圳', model_detail_slug='model_25023_cs', reg_year=2015, reg_month=3, deal_year=datetime.datetime.now().year, deal_month=datetime.datetime.now().month, mile=2):
         """
-        预测返回
+        查询
         """
         # 校验参数
         check_params_value(reg_year, reg_month, deal_year, deal_month, mile)
 
-        detail_slug = self.combine_detail.loc[(self.combine_detail['detail_model_slug'] == model_detail_slug), 'car_autohome_detail_id'].values[0]
-
-        # 全国均值
-        online_year, median_price = self.global_model_mean.loc[(self.global_model_mean['detail_slug'] == int(detail_slug)), ['online_year', 'median_price']].values[0]
+        # 查询对应条件预测
+        self.result = db_operate.query(model_detail_slug, city)
+        if len(self.result) == 0:
+            raise ApiParamsValueError('model_detail_slug or city', 0, 'Unknown model or city!')
+        online_year, median_price, k, b = self.result.loc[0, :].values
         median_price = int(median_price * 10000)
         # 省份差异
-        province = self.province_city_map.loc[(self.province_city_map['city'] == city), 'province'].values[0]
-        k, b = self.div_province_k_param.loc[(self.div_province_k_param['province'] == province), ['k', 'b']].values[0]
         province_price = k * median_price + b
 
         # 注册年份差异
         warehouse_year = reg_year - online_year
-        k = self.div_warehouse_k_param.loc[0, 'k']
+        k = 0.0758
         warehouse_price = (k * warehouse_year) * median_price
 
         # 公里数差异
@@ -228,8 +220,8 @@ class Predict(object):
         used_years = deal_year - reg_year
         if used_months <= 0:
             used_months = 1
-        k, b = self.div_mile_k_param.loc[0, ['k', 'b']].values
-        mile_price = (k * (mile/used_months) + b) * median_price
+        k, b = -0.1931, 0.0263
+        mile_price = (k * (mile / used_months) + b) * median_price
 
         final_price = median_price + province_price + warehouse_price + mile_price
 
@@ -242,6 +234,12 @@ class Predict(object):
         # 根据交易方式修正预测值
         self.add_process_intent(final_price, used_years)
 
+    def predict(self, city='深圳', model_detail_slug='model_25023_cs', reg_year=2015, reg_month=3, deal_year=datetime.datetime.now().year, deal_month=datetime.datetime.now().month, mile=2, ret_type=gl.RETURN_RECORDS):
+        """
+        预测返回
+        """
+        self.query(city=city, model_detail_slug=model_detail_slug, reg_year=reg_year, reg_month=reg_month, deal_year=deal_year, deal_month=deal_month, mile=mile)
+
         if ret_type == gl.RETURN_RECORDS:
             return self.result.to_dict(gl.RETURN_RECORDS)
         else:
@@ -251,39 +249,8 @@ class Predict(object):
         """
         预测估值和车况定级
         """
-        # 校验参数
-        check_params_value(reg_year, reg_month, deal_year, deal_month, mile)
-
-        detail_slug = self.combine_detail.loc[
-            (self.combine_detail['detail_model_slug'] == model_detail_slug), 'car_autohome_detail_id'].values[0]
-
-        # 全国均值
-        online_year, median_price = self.global_model_mean.loc[
-            (self.global_model_mean['detail_slug'] == int(detail_slug)), ['online_year', 'median_price']].values[0]
-        median_price = int(median_price * 10000)
-        # 省份差异
-        province = self.province_city_map.loc[(self.province_city_map['city'] == city), 'province'].values[0]
-        k, b = self.div_province_k_param.loc[(self.div_province_k_param['province'] == province), ['k', 'b']].values[0]
-        province_price = k * median_price + b
-
-        # 注册年份差异
-        warehouse_year = reg_year - online_year
-        k = self.div_warehouse_k_param.loc[0, 'k']
-        warehouse_price = (k * warehouse_year) * median_price
-
-        # 公里数差异
-        used_months = ((deal_year - reg_year) * 12 + deal_month - reg_month)
+        self.query(city=city, model_detail_slug=model_detail_slug, reg_year=reg_year, reg_month=reg_month, deal_year=deal_year, deal_month=deal_month, mile=mile)
         used_years = deal_year - reg_year
-        if used_months <= 0:
-            used_months = 1
-        k, b = self.div_mile_k_param.loc[0, ['k', 'b']].values
-        mile_price = (k * (mile / used_months) + b) * median_price
-
-        final_price = median_price + province_price + warehouse_price + mile_price
-
-        # 根据交易方式修正预测值
-        self.add_process_intent(final_price, used_years)
-
         # 车况评级
         condition_valuate = pd.read_json(condition_desc, orient='records')
         condition_valuate = condition_evaluate_map.merge(condition_valuate, how='left', on=['item'])
@@ -329,38 +296,7 @@ class Predict(object):
         """
         计算历史价格趋势
         """
-        # 校验参数
-        check_params_value(reg_year, reg_month, deal_year, deal_month, mile)
-
-        detail_slug = self.combine_detail.loc[
-            (self.combine_detail['detail_model_slug'] == model_detail_slug), 'car_autohome_detail_id'].values[0]
-
-        # 全国均值
-        online_year, median_price = self.global_model_mean.loc[
-            (self.global_model_mean['detail_slug'] == int(detail_slug)), ['online_year', 'median_price']].values[0]
-        median_price = int(median_price * 10000)
-        # 省份差异
-        province = self.province_city_map.loc[(self.province_city_map['city'] == city), 'province'].values[0]
-        k, b = self.div_province_k_param.loc[(self.div_province_k_param['province'] == province), ['k', 'b']].values[0]
-        province_price = k * median_price + b
-
-        # 注册年份差异
-        warehouse_year = reg_year - online_year
-        k = self.div_warehouse_k_param.loc[0, 'k']
-        warehouse_price = (k * warehouse_year) * median_price
-
-        # 公里数差异
-        used_months = ((deal_year - reg_year) * 12 + deal_month - reg_month)
-        used_years = deal_year - reg_year
-        if used_months <= 0:
-            used_months = 1
-        k, b = self.div_mile_k_param.loc[0, ['k', 'b']].values
-        mile_price = (k * (mile / used_months) + b) * median_price
-
-        final_price = median_price + province_price + warehouse_price + mile_price
-
-        # 根据交易方式修正预测值
-        self.add_process_intent(final_price, used_years)
+        self.query(city=city, model_detail_slug=model_detail_slug, reg_year=reg_year, reg_month=reg_month, deal_year=deal_year, deal_month=deal_month, mile=mile)
 
         condition = self.result.loc[0, 'condition']
         result = pd.DataFrame([], columns=['0', '-1', '-2', '-3', '-4', '-5', '-6', 'type', 'condition'])
@@ -381,39 +317,8 @@ class Predict(object):
         """
         计算未来价格趋势
         """
-        # 校验参数
-        check_params_value(reg_year, reg_month, deal_year, deal_month, mile)
-
-        detail_slug = self.combine_detail.loc[
-            (self.combine_detail['detail_model_slug'] == model_detail_slug), 'car_autohome_detail_id'].values[0]
-
-        # 全国均值
-        online_year, median_price = self.global_model_mean.loc[
-            (self.global_model_mean['detail_slug'] == int(detail_slug)), ['online_year', 'median_price']].values[0]
-        median_price = int(median_price * 10000)
-        # 省份差异
-        province = self.province_city_map.loc[(self.province_city_map['city'] == city), 'province'].values[0]
-        k, b = self.div_province_k_param.loc[(self.div_province_k_param['province'] == province), ['k', 'b']].values[0]
-        province_price = k * median_price + b
-
-        # 注册年份差异
-        warehouse_year = reg_year - online_year
-        k = self.div_warehouse_k_param.loc[0, 'k']
-        warehouse_price = (k * warehouse_year) * median_price
-
-        # 公里数差异
-        used_months = ((deal_year - reg_year) * 12 + deal_month - reg_month)
+        self.query(city=city, model_detail_slug=model_detail_slug, reg_year=reg_year, reg_month=reg_month, deal_year=deal_year, deal_month=deal_month, mile=mile)
         used_years = deal_year - reg_year
-        if used_months <= 0:
-            used_months = 1
-        k, b = self.div_mile_k_param.loc[0, ['k', 'b']].values
-        mile_price = (k * (mile / used_months) + b) * median_price
-
-        final_price = median_price + province_price + warehouse_price + mile_price
-
-        # 根据交易方式修正预测值
-        self.add_process_intent(final_price, used_years)
-
         condition = self.result.loc[0, 'condition']
         result = pd.DataFrame([], columns=['0', '12', '24', '36', 'type', 'condition'])
         result.loc[0, ['0', 'type']] = self.result.loc[1, condition], 'buy'
@@ -435,38 +340,7 @@ class Predict(object):
         """
         残值返回
         """
-        # 校验参数
-        check_params_value(reg_year, reg_month, deal_year, deal_month, mile)
-
-        detail_slug = self.combine_detail.loc[
-            (self.combine_detail['detail_model_slug'] == model_detail_slug), 'car_autohome_detail_id'].values[0]
-
-        # 全国均值
-        online_year, median_price = self.global_model_mean.loc[
-            (self.global_model_mean['detail_slug'] == int(detail_slug)), ['online_year', 'median_price']].values[0]
-        median_price = int(median_price * 10000)
-        # 省份差异
-        province = self.province_city_map.loc[(self.province_city_map['city'] == city), 'province'].values[0]
-        k, b = self.div_province_k_param.loc[(self.div_province_k_param['province'] == province), ['k', 'b']].values[0]
-        province_price = k * median_price + b
-
-        # 注册年份差异
-        warehouse_year = reg_year - online_year
-        k = self.div_warehouse_k_param.loc[0, 'k']
-        warehouse_price = (k * warehouse_year) * median_price
-
-        # 公里数差异
-        used_months = ((deal_year - reg_year) * 12 + deal_month - reg_month)
-        used_years = deal_year - reg_year
-        if used_months <= 0:
-            used_months = 1
-        k, b = self.div_mile_k_param.loc[0, ['k', 'b']].values
-        mile_price = (k * (mile / used_months) + b) * median_price
-
-        final_price = median_price + province_price + warehouse_price + mile_price
-
-        # 根据交易方式修正预测值
-        self.add_process_intent(final_price, used_years)
+        self.query(city=city, model_detail_slug=model_detail_slug, reg_year=reg_year, reg_month=reg_month, deal_year=deal_year, deal_month=deal_month, mile=mile)
 
         result = pd.DataFrame([], columns=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'intent', 'condition'])
         temp = pd.DataFrame(pd.Series(self.result.loc[1, ['excellent', 'good', 'fair', 'bad']].values), columns=['0'])
@@ -478,6 +352,8 @@ class Predict(object):
         temp = pd.DataFrame(pd.Series(self.result.loc[3, ['excellent', 'good', 'fair', 'bad']].values), columns=['0'])
         temp['intent'], temp['condition'] = 'private', pd.Series(['excellent', 'good', 'fair', 'bad'])
         result = result.append(temp, sort=False)
+
+        used_years = deal_year - reg_year
 
         k, b = 0.008, 0.11
         param = used_years * k + b

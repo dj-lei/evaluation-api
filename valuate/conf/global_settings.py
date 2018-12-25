@@ -65,25 +65,6 @@ elif RUNTIME_ENVIRONMENT == 'PRODUCT':
     HISTORY_DB_USER = 'leidengjun'
     HISTORY_DB_PASSWD = 'ldj_DEV_~!'
     HISTORY_PINGJIA_ENGINE = 'mysql+pymysql://' + HISTORY_DB_USER + ':' + HISTORY_DB_PASSWD + '@' + HISTORY_DB_ADDR + '/databak?charset=utf8'
-elif RUNTIME_ENVIRONMENT == 'PRODUCT_OUTTER':
-    # 生产库外网
-    PRODUCE_DB_ADDR_OUTTER = '101.201.143.74'
-    PRODUCE_DB_USER = 'leidengjun'
-    PRODUCE_DB_PASSWD = 'ldj_DEV_~!'
-    PRODUCE_PINGJIA_ENGINE = 'mysql+pymysql://'+PRODUCE_DB_USER+':'+PRODUCE_DB_PASSWD+'@'+PRODUCE_DB_ADDR_OUTTER+'/pingjia?charset=utf8'
-    PRODUCE_DATASOURCE_ENGINE = 'mysql+pymysql://'+PRODUCE_DB_USER+':'+PRODUCE_DB_PASSWD+'@'+PRODUCE_DB_ADDR_OUTTER+'/datasource?charset=utf8'
-
-    # 生产库
-    TEST_DB_ADDR = '101.201.199.62'
-    TEST_DB_USER = 'leidengjun'
-    TEST_DB_PASSWD = 'ldj_DEV_~!'
-    TEST_PINGJIA_ENGINE = 'mysql+pymysql://' + TEST_DB_USER + ':' + TEST_DB_PASSWD + '@' + TEST_DB_ADDR + '/valuate?charset=utf8'
-
-    # 历史库
-    HISTORY_DB_ADDR = '101.201.148.49:3306'
-    HISTORY_DB_USER = 'leidengjun'
-    HISTORY_DB_PASSWD = 'ldj_DEV_~!'
-    HISTORY_PINGJIA_ENGINE = 'mysql+pymysql://'+HISTORY_DB_USER+':'+HISTORY_DB_PASSWD+'@'+HISTORY_DB_ADDR+'/databak?charset=utf8'
 
 ###########################
 # 模型预测配置
