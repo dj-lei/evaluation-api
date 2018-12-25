@@ -189,7 +189,7 @@ class Predict(object):
             condition = 'good'
         elif 8 < used_years <= 11:
             condition = 'fair'
-        elif 12 < used_years:
+        elif 11 < used_years:
             condition = 'bad'
         # 计算所有交易类型
         self.result = cal_intent_condition(self.result.predict_price.values, condition)
