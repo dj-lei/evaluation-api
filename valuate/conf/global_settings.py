@@ -22,11 +22,6 @@ if RUNTIME_ENVIRONMENT == 'LOCAL':
     TEST_DB_PASSWD = 'De32wsxC'
     TEST_PINGJIA_ENGINE = 'mysql+pymysql://'+TEST_DB_USER+':'+TEST_DB_PASSWD+'@'+TEST_DB_ADDR+'/pingjia?charset=utf8'
 
-    # 历史库
-    HISTORY_DB_ADDR = '101.201.148.49:3306'
-    HISTORY_DB_USER = 'leidengjun'
-    HISTORY_DB_PASSWD = 'ldj_DEV_~!'
-    HISTORY_PINGJIA_ENGINE = 'mysql+pymysql://'+HISTORY_DB_USER+':'+HISTORY_DB_PASSWD+'@'+HISTORY_DB_ADDR+'/databak?charset=utf8'
 elif RUNTIME_ENVIRONMENT == 'TEST':
     # 生产库外网
     PRODUCE_DB_ADDR_OUTTER = '10.45.138.200'
@@ -41,11 +36,6 @@ elif RUNTIME_ENVIRONMENT == 'TEST':
     TEST_DB_PASSWD = 'De32wsxC'
     TEST_PINGJIA_ENGINE = 'mysql+pymysql://' + TEST_DB_USER + ':' + TEST_DB_PASSWD + '@' + TEST_DB_ADDR + '/pingjia?charset=utf8'
 
-    # 历史库
-    HISTORY_DB_ADDR = '10.45.144.69:3306'
-    HISTORY_DB_USER = 'leidengjun'
-    HISTORY_DB_PASSWD = 'ldj_DEV_~!'
-    HISTORY_PINGJIA_ENGINE = 'mysql+pymysql://' + HISTORY_DB_USER + ':' + HISTORY_DB_PASSWD + '@' + HISTORY_DB_ADDR + '/databak?charset=utf8'
 elif RUNTIME_ENVIRONMENT == 'PRODUCT':
     # 生产库内网
     PRODUCE_DB_ADDR_OUTTER = '10.45.138.200'
@@ -60,20 +50,11 @@ elif RUNTIME_ENVIRONMENT == 'PRODUCT':
     TEST_DB_PASSWD = 'De32wsxC'
     TEST_PINGJIA_ENGINE = 'mysql+mysqlconnector://' + TEST_DB_USER + ':' + TEST_DB_PASSWD + '@' + TEST_DB_ADDR + '/valuate?charset=utf8'
 
-    # 历史库
-    HISTORY_DB_ADDR = '10.45.144.69:3306'
-    HISTORY_DB_USER = 'leidengjun'
-    HISTORY_DB_PASSWD = 'ldj_DEV_~!'
-    HISTORY_PINGJIA_ENGINE = 'mysql+pymysql://' + HISTORY_DB_USER + ':' + HISTORY_DB_PASSWD + '@' + HISTORY_DB_ADDR + '/databak?charset=utf8'
 
 ###########################
 # 模型预测配置
 ###########################
-# # 畅销程度系数
-# PROFITS = {'A': (0.06, 0.11, 0.027, 0.02, 0.12, 0.08, 0.09, 0.006, -0.01),
-#            'B': (0.05, 0.13, 0.031, 0.025, 0.14, 0.10, 0.10, 0.007, -0.01),
-#            'C': (0.05, 0.15, 0.02, 0.03, 0.16, 0.12, 0.11, 0.003, -0.01)}
-
+# 畅销程度系数
 PROFITS = {'A': (0.05, 0.095, 0.027, 0.02, 0.12, 0.08, 0.09, 0.006, -0.01),
            'B': (0.05, 0.114, 0.031, 0.025, 0.14, 0.10, 0.10, 0.007, -0.01),
            'C': (0.05, 0.134, 0.02, 0.03, 0.16, 0.12, 0.11, 0.003, -0.01)}
