@@ -256,6 +256,8 @@ class Predict(object):
         condition_valuate = condition_evaluate_map.merge(condition_valuate, how='left', on=['item'])
         condition_valuate['score'] = condition_valuate.apply(cal_score, axis=1)
         condition_valuate = condition_valuate.groupby(['position'])['score'].sum().reset_index()
+        if used_years <= 0:
+            used_years = 1
         condition = cal_final_score_and_condition(condition_valuate, gl.CAR_CONDITION.index(self.result.loc[0, 'condition']), mile/used_years)
         self.result['condition'] = condition
 
