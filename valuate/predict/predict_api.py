@@ -8,7 +8,7 @@ def get_profit_rate(intent, popularity, price):
     # 按畅销程度分级,各交易方式相比于标价的固定比例
     profits = gl.PROFITS
     profit = profits[popularity]
-    rate = 0.35 * math.e ** (-0.133 * (price * (1 - profit[0]) / 10000)) + 0.08
+    rate = 0.48 * math.e ** (-0.304 * (price * (1 - profit[0]) / 10000)) + 0.08
 
     # 计算各交易方式的价格相比于标价的固定比例
     if intent == 'sell':
@@ -211,6 +211,8 @@ class Predict(object):
         province_price = k * median_price + b
 
         # 注册年份差异
+        if online_year > datetime.datetime.now().year:
+            online_year = datetime.datetime.now().year
         warehouse_year = reg_year - online_year
         k = 0.0758
         warehouse_price = (k * warehouse_year) * median_price
@@ -218,8 +220,8 @@ class Predict(object):
         # 公里数差异
         used_months = ((deal_year - reg_year) * 12 + deal_month - reg_month)
         used_years = deal_year - reg_year
-        if used_months <= 0:
-            used_months = 1
+        if used_months <= 12:
+            used_months = 12
         k, b = -0.1931, 0.0263
         mile_price = (k * (mile / used_months) + b) * median_price
 
