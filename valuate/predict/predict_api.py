@@ -211,17 +211,18 @@ class Predict(object):
         province_price = k * median_price + b
 
         # 注册年份差异
-        if online_year > datetime.datetime.now().year:
-            online_year = datetime.datetime.now().year
-        warehouse_year = reg_year - online_year
+        if online_year >= datetime.datetime.now().year:
+            warehouse_year = 0
+        else:
+            warehouse_year = reg_year - online_year
         k = 0.0758
         warehouse_price = (k * warehouse_year) * median_price
 
         # 公里数差异
         used_months = ((deal_year - reg_year) * 12 + deal_month - reg_month)
         used_years = deal_year - reg_year
-        if used_months <= 12:
-            used_months = 12
+        if used_months <= 6:
+            used_months = 6
         k, b = -0.1931, 0.0263
         mile_price = (k * (mile / used_months) + b) * median_price
 
