@@ -228,11 +228,11 @@ class Predict(object):
 
         final_price = median_price + province_price + warehouse_price + mile_price
 
-        # print('median_price', int(median_price))
-        # print('province_price', int(province_price))
-        # print('warehouse_price', int(warehouse_price))
-        # print('mile_price', int(mile_price))
-        # print('final_price', int(final_price))
+        print('median_price', int(median_price))
+        print('province_price', int(province_price))
+        print('warehouse_price', int(warehouse_price))
+        print('mile_price', int(mile_price))
+        print('final_price', int(final_price))
 
         # 根据交易方式修正预测值
         self.add_process_intent(final_price, used_years)
