@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
 
     predict = Predict()
-    result = predict.predict(city='成都', model_detail_slug='car_autohome_detail_35368', reg_year=2018, reg_month=11, deal_year=2019, deal_month=1, mile=0.5, ret_type='normal')
+    result = predict.predict(city='成都', model_detail_slug='b4875e4db5_autotis', reg_year=2018, reg_month=11, deal_year=2019, deal_month=1, mile=0.5, ret_type='normal')
     print(result)
     # result = predict.predict_with_condition(condition_desc=gl.CONDITION_JSON, city='苏州',model_detail_slug='m14877_ba', reg_year=2018, reg_month=2,deal_year=2018, deal_month=12, mile=12, ret_type='normal')
     # print(result)
