@@ -8,7 +8,11 @@ def get_profit_rate(intent, popularity, price):
     # 按畅销程度分级,各交易方式相比于标价的固定比例
     profits = gl.PROFITS
     profit = profits[popularity]
-    rate = 0.48 * math.e ** (-0.304 * (price * (1 - profit[0]) / 10000)) + 0.08
+
+    rate = 0.34 * math.e ** (-0.6 * math.log(price / 10000, math.e))
+    if rate <= 0.101:
+        rate = 0.101
+    # rate = 0.48 * math.e ** (-0.304 * (price / 10000)) + 0.08
 
     # 计算各交易方式的价格相比于标价的固定比例
     if intent == 'sell':
@@ -173,7 +177,7 @@ class Predict(object):
         """
         # 组合结果
         self.result = result_map.copy()
-        self.result.loc[(self.result['intent'] == 'release'), 'predict_price'] = final_price
+        self.result.loc[(self.result['intent'] == 'buy'), 'predict_price'] = final_price
         self.result['predict_price'] = self.result['predict_price'].fillna(final_price)
 
         self.result['popularity'] = 'A'
@@ -215,7 +219,7 @@ class Predict(object):
             warehouse_year = 0
         else:
             warehouse_year = reg_year - online_year
-        k = 0.0758
+        k = 0.028
         warehouse_price = (k * warehouse_year) * median_price
 
         # 公里数差异
@@ -227,7 +231,7 @@ class Predict(object):
         mile_price = (k * (mile / used_months) + b) * median_price
 
         final_price = median_price + province_price + warehouse_price + mile_price
-
+        # print(k)
         # print('median_price', int(median_price))
         # print('province_price', int(province_price))
         # print('warehouse_price', int(warehouse_price))

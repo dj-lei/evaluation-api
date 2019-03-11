@@ -66,7 +66,7 @@ CAR_CONDITION_COEFFICIENT_VALUES = [1.04, 1, 0.95, 0.89]
 
 # 交易方式
 INTENT_TYPE = ['sell', 'buy', 'release', 'private', 'lowest', 'cpo', 'replace', 'auction', 'avg-buy', 'avg-sell']
-INTENT_TYPE_CAN = ['release', 'release', 'release', 'release', 'release', 'release', 'release', 'release', 'release', 'release']
+INTENT_TYPE_CAN = ['buy', 'buy', 'buy', 'buy', 'buy', 'buy', 'buy', 'buy', 'buy', 'buy']
 
 # 返回类型
 RETURN_RECORDS = 'records'
