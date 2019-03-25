@@ -9,42 +9,21 @@ ENCODING = 'utf-8'
 RUNTIME_ENVIRONMENT = os.environ.get('VALUATE_RUNTIME_ENVIRONMENT', 'PRODUCT')
 
 if RUNTIME_ENVIRONMENT == 'LOCAL':
-    # 生产库外网
-    PRODUCE_DB_ADDR_OUTTER = '101.201.143.74'
-    PRODUCE_DB_USER = 'leidengjun'
-    PRODUCE_DB_PASSWD = 'ldj_DEV_~!'
-    PRODUCE_PINGJIA_ENGINE = 'mysql+pymysql://'+PRODUCE_DB_USER+':'+PRODUCE_DB_PASSWD+'@'+PRODUCE_DB_ADDR_OUTTER+'/pingjia?charset=utf8'
-    PRODUCE_DATASOURCE_ENGINE = 'mysql+pymysql://'+PRODUCE_DB_USER+':'+PRODUCE_DB_PASSWD+'@'+PRODUCE_DB_ADDR_OUTTER+'/datasource?charset=utf8'
-
-    # 测试库
+    # 外网
     TEST_DB_ADDR = '101.200.229.249'
     TEST_DB_USER = 'pingjia'
     TEST_DB_PASSWD = 'De32wsxC'
     TEST_PINGJIA_ENGINE = 'mysql+pymysql://'+TEST_DB_USER+':'+TEST_DB_PASSWD+'@'+TEST_DB_ADDR+'/china_used_car_estimate?charset=utf8'
 
-elif RUNTIME_ENVIRONMENT == 'TEST':
-    # 生产库外网
-    PRODUCE_DB_ADDR_OUTTER = '10.45.138.200'
-    PRODUCE_DB_USER = 'leidengjun'
-    PRODUCE_DB_PASSWD = 'ldj_DEV_~!'
-    PRODUCE_PINGJIA_ENGINE = 'mysql+pymysql://' + PRODUCE_DB_USER + ':' + PRODUCE_DB_PASSWD + '@' + PRODUCE_DB_ADDR_OUTTER + '/pingjia?charset=utf8'
-    PRODUCE_DATASOURCE_ENGINE = 'mysql+pymysql://' + PRODUCE_DB_USER + ':' + PRODUCE_DB_PASSWD + '@' + PRODUCE_DB_ADDR_OUTTER + '/datasource?charset=utf8'
-
-    # 测试库
-    TEST_DB_ADDR = '10.44.206.161'
-    TEST_DB_USER = 'pingjia'
-    TEST_DB_PASSWD = 'De32wsxC'
-    TEST_PINGJIA_ENGINE = 'mysql+pymysql://' + TEST_DB_USER + ':' + TEST_DB_PASSWD + '@' + TEST_DB_ADDR + '/china_used_car_estimate?charset=utf8'
+elif RUNTIME_ENVIRONMENT == 'INTRANET':
+    # 内网
+    TEST_DB_ADDR = '10.45.138.200'
+    TEST_DB_USER = 'leidengjun'
+    TEST_DB_PASSWD = 'ldj_DEV_~!'
+    TEST_PINGJIA_ENGINE = 'mysql+pymysql://'+TEST_DB_USER+':'+TEST_DB_PASSWD+'@'+TEST_DB_ADDR+'/china_used_car_estimate?charset=utf8'
 
 elif RUNTIME_ENVIRONMENT == 'PRODUCT':
-    # 生产库内网
-    PRODUCE_DB_ADDR_OUTTER = '10.45.138.200'
-    PRODUCE_DB_USER = 'leidengjun'
-    PRODUCE_DB_PASSWD = 'ldj_DEV_~!'
-    PRODUCE_PINGJIA_ENGINE = 'mysql+pymysql://' + PRODUCE_DB_USER + ':' + PRODUCE_DB_PASSWD + '@' + PRODUCE_DB_ADDR_OUTTER + '/pingjia?charset=utf8'
-    PRODUCE_DATASOURCE_ENGINE = 'mysql+pymysql://' + PRODUCE_DB_USER + ':' + PRODUCE_DB_PASSWD + '@' + PRODUCE_DB_ADDR_OUTTER + '/datasource?charset=utf8'
-
-    # 生产库
+    # 生产环境
     TEST_DB_ADDR = '100.114.30.239:18056'
     TEST_DB_USER = 'pingjia'
     TEST_DB_PASSWD = 'De32wsxC'
