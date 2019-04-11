@@ -209,7 +209,7 @@ class Predict(object):
         self.result = db_operate.query(model_detail_slug, city)
         if len(self.result) == 0:
             raise ApiParamsValueError('model_detail_slug or city', 0, 'Unknown model or city!')
-        online_year, median_price, k, b = self.result.loc[0, :].values
+        online_year, median_price, control, k, b = self.result.loc[0, :].values
         median_price = int(median_price * 10000)
         # 省份差异
         province_price = k * median_price + b
@@ -219,7 +219,12 @@ class Predict(object):
             warehouse_year = 0
         else:
             warehouse_year = reg_year - online_year
-        k = 0.028
+
+        # 调整车龄差异
+        if control == '自动':
+            k = 0.055
+        else:
+            k = 0.08
         warehouse_price = (k * warehouse_year) * median_price
 
         # 公里数差异
