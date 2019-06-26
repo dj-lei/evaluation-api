@@ -10,24 +10,24 @@ RUNTIME_ENVIRONMENT = os.environ.get('VALUATE_RUNTIME_ENVIRONMENT', 'PRODUCT')
 
 if RUNTIME_ENVIRONMENT == 'LOCAL':
     # 外网
-    TEST_DB_ADDR = '101.200.229.249'
+    TEST_DB_ADDR = '59.110.233.103'
     TEST_DB_USER = 'pingjia'
     TEST_DB_PASSWD = 'De32wsxC'
     TEST_PINGJIA_ENGINE = 'mysql+pymysql://'+TEST_DB_USER+':'+TEST_DB_PASSWD+'@'+TEST_DB_ADDR+'/china_used_car_estimate?charset=utf8'
 
 elif RUNTIME_ENVIRONMENT == 'INTRANET':
     # 内网
-    TEST_DB_ADDR = '10.45.138.200'
-    TEST_DB_USER = 'leidengjun'
-    TEST_DB_PASSWD = 'ldj_DEV_~!'
+    TEST_DB_ADDR = '192.168.2.114'
+    TEST_DB_USER = 'pingjia'
+    TEST_DB_PASSWD = 'De32wsxC'
     TEST_PINGJIA_ENGINE = 'mysql+pymysql://'+TEST_DB_USER+':'+TEST_DB_PASSWD+'@'+TEST_DB_ADDR+'/china_used_car_estimate?charset=utf8'
 
 elif RUNTIME_ENVIRONMENT == 'PRODUCT':
     # 生产环境
-    TEST_DB_ADDR = '100.114.30.239:18056'
+    TEST_DB_ADDR = '192.168.2.114'
     TEST_DB_USER = 'pingjia'
     TEST_DB_PASSWD = 'De32wsxC'
-    TEST_PINGJIA_ENGINE = 'mysql+mysqlconnector://' + TEST_DB_USER + ':' + TEST_DB_PASSWD + '@' + TEST_DB_ADDR + '/china_used_car_estimate?charset=utf8'
+    TEST_PINGJIA_ENGINE = 'mysql+pymysql://'+TEST_DB_USER+':'+TEST_DB_PASSWD+'@'+TEST_DB_ADDR+'/china_used_car_estimate?charset=utf8'
 
 
 ###########################
